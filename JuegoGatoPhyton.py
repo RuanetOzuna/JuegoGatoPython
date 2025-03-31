@@ -23,6 +23,8 @@ def make_move(index):
         turn = "O" if turn == "X" else "X"
         if vs_computer and turn == "O":
             computer_move()
+    else:
+        messagebox.showwarning("Movimiento inválido", "¡Esta casilla ya está ocupada!")
 
 def computer_move():
     available_moves = [i for i in buttons if buttons[i]['text'] == ""]
