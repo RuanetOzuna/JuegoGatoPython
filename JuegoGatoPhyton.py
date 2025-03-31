@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 def make_move(index):
     global turn
@@ -17,8 +18,9 @@ def computer_move():
         turn = "X"
 
 def reset_board():
-    global turn
+    global turn, game_over
     turn = "X"
+    game_over = False
     for button in buttons.values():
         button['text'] = ""
 
@@ -27,14 +29,17 @@ def start_game(mode):
     vs_computer = True if mode == "vs_computer" else False
     reset_board()
 
-import random
+# Inicializar ventana
 root = tk.Tk()
 root.title("Juego del Gato")
 
+# Variables globales
 turn = "X"
 vs_computer = False
+game_over = False
 buttons = {}
 
+# Crear tablero (3x3)
 frame = tk.Frame(root)
 frame.pack()
 
@@ -43,12 +48,17 @@ for i in range(1, 10):
                            command=lambda i=i: make_move(i))
     buttons[i].grid(row=(i-1)//3, column=(i-1)%3)
 
+# Controles de modo de juego
 control_frame = tk.Frame(root)
-control_frame.pack()
+control_frame.pack(pady=10)
 
-tk.Button(control_frame, text="Jugador vs Jugador", command=lambda: start_game("vs_player")).pack(side=tk.LEFT, padx=10)
-tk.Button(control_frame, text="Jugador vs Computadora", command=lambda: start_game("vs_computer")).pack(side=tk.RIGHT, padx=10)
+tk.Button(control_frame, text="Jugador vs Jugador",
+          command=lambda: start_game("vs_player")).pack(side=tk.LEFT, padx=10)
 
+tk.Button(control_frame, text="Jugador vs Computadora",
+          command=lambda: start_game("vs_computer")).pack(side=tk.RIGHT, padx=10)
+
+# Botón de reinicio
 tk.Button(root, text="Reiniciar", command=reset_board).pack(pady=10)
 
 root.mainloop()
