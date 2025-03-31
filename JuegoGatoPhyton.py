@@ -1,19 +1,38 @@
 import tkinter as tk
+from tkinter import messagebox
 import random
+
+def check_winner():
+    for line in winning_combinations:
+        if buttons[line[0]]['text'] == buttons[line[1]]['text'] == buttons[line[2]]['text'] != "":
+            messagebox.showinfo("Juego Terminado", f"{buttons[line[0]]['text']} ha ganado!")
+            reset_board()
+            return True
+    if all(button['text'] != "" for button in buttons.values()):
+        messagebox.showinfo("Juego Terminado", "Es un empate!")
+        reset_board()
+        return True
+    return False
 
 def make_move(index):
     global turn
     if buttons[index]['text'] == "":
         buttons[index]['text'] = turn
+        if check_winner():
+            return
         turn = "O" if turn == "X" else "X"
         if vs_computer and turn == "O":
             computer_move()
+    else:
+        messagebox.showwarning("Movimiento inválido", "¡Esta casilla ya está ocupada!")
 
 def computer_move():
     available_moves = [i for i in buttons if buttons[i]['text'] == ""]
     if available_moves:
         move = random.choice(available_moves)
         buttons[move]['text'] = "O"
+        if check_winner():
+            return
         global turn
         turn = "X"
 
@@ -29,7 +48,6 @@ def start_game(mode):
     vs_computer = True if mode == "vs_computer" else False
     reset_board()
 
-# Inicializar ventana
 root = tk.Tk()
 root.title("Juego del Gato")
 
@@ -38,6 +56,9 @@ turn = "X"
 vs_computer = False
 game_over = False
 buttons = {}
+winning_combinations = [(1, 2, 3), (4, 5, 6), (7, 8, 9),
+                        (1, 4, 7), (2, 5, 8), (3, 6, 9),
+                        (1, 5, 9), (3, 5, 7)]
 
 # Crear tablero (3x3)
 frame = tk.Frame(root)
